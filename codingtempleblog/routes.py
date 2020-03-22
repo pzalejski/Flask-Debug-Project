@@ -5,7 +5,7 @@ from flask import render_template, request, flash, redirect, url_for
 from codingtempleblog.forms import SignUpForm, LoginForm, PostForm, PaymentForm
 
 # Import Models
-from codingtempleblog.models import User,Post
+from codingtempleblog.models import User,Post, check_password_hash
 
 # Import Flask-Login Module/functions
 from flask_login import login_user, current_user,logout_user, login_required
@@ -40,17 +40,21 @@ def createUser():
 @app.route('/login',methods=["GET","POST"])
 def login():
     form = LoginForm()
-    if request.method == "POST":
+    if request.method == "POST" and form.validate():
         user_email = form.email.data
         password = form.password.data
         logged_user = User.query.filter(User.email == user_email).first()
         if logged_user and check_password_hash(logged_user.password,password):
             login_user(logged_user)
             print(current_user.username)
-            return redirect(url_for('home'))
+        else:
+            flash('Enter Valid Credentials')
+            return redirect(url_for('login'))    
+        print(user_email,password)
+        return redirect(url_for('home'))
     else:
-        print("Not valid")
-    return render_template('login.html',login_form = form)
+        print("Incorrect login email or password")
+    return render_template('login.html',login_form=form)
 
 @app.route('/logout')
 def logout():
@@ -70,6 +74,12 @@ def post():
     post = Post(title = title, content = content, user_id = user_id)
     db.session.add(post)
     db.session.commit()
-    return render_template('post.html',post_form = form)
+    return render_template('post.html', post_form=form)
+    
+
+@app.route('/post/<int:post_id>')
+def post_detail(post_id):
+    post = Post.query.get_or_404(post_id)
+    return render_template('post_detail.html', post=post)
 
 

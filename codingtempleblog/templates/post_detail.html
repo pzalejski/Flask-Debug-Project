@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+
+<div class="container">
+    <h1>The current author of this post is: {{ post.author.username }}</h1>
+
+    <h3>Content:</h3>
+    <hr>
+
+    <h3>Title: {{ post.title }}</h3>
+    <p> {{ post.content }}</p>
+    <blockquote>
+        Date Created: {{ post.date_created }}
+    </blockquote>
+    <button class="btn btn-outline-primary"><a href="{{ url_for('home') }}"> Back to Home</a></button>
+</div>
+
+{% endblock content %}

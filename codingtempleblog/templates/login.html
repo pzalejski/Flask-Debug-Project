@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
 
-{ % block content % }
+{% block content %}
 
 <div class="container">
     
     <h1>Login</h1>
     <div class="form-group">
         <form action="" method="POST">
+            {{ login_form.hidden_tag() }}
             <fieldset>
                 {{login_form.email.label}}
                 {{login_form.email(class="form-control")}}
@@ -21,4 +22,4 @@
 
 </div>
 
-{% endblock content % }
+{% endblock content %}
